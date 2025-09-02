@@ -6,7 +6,7 @@
 /*   By: jomanuel <jomanuel@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 23:15:40 by jomanuel          #+#    #+#             */
-/*   Updated: 2025/09/01 23:44:30 by jomanuel         ###   ########.fr       */
+/*   Updated: 2025/09/02 23:14:25 by jomanuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,6 @@ void	philo_eat(t_data *data, t_philo *philo)
 
 static void	philo_lock_forks(t_data *data, t_philo *philo)
 {
-	pthread_mutex_t *first;
-    pthread_mutex_t *second;
-
 	pthread_mutex_lock(&data->manager);
 	while (!philo->can_eat)
 	{
@@ -67,67 +64,48 @@ static void	philo_lock_forks(t_data *data, t_philo *philo)
 			break ;
 	}
 	pthread_mutex_unlock(&data->manager);
-	first  = philo->r_fork;
-    second = philo->l_fork;
-	if (philo->l_fork < philo->r_fork)
-    {
-        first  = philo->l_fork;
-        second = philo->r_fork;
-    }
-    pthread_mutex_lock(first);
-    pthread_mutex_lock(&data->manager);
-	if (!data->philo_over)
-	{
-		pthread_mutex_unlock(&data->manager);
-		print_message(philo, "has taken a fork");
-	}
-	else
-		pthread_mutex_unlock(&data->manager);
-    pthread_mutex_lock(second);
-    pthread_mutex_lock(&data->manager);
-	if (!data->philo_over)
-	{
-		pthread_mutex_unlock(&data->manager);
-		print_message(philo, "has taken a fork");
-	}
-	else
-		pthread_mutex_unlock(&data->manager);
+	pthread_mutex_lock(philo->r_fork);
+	print_message(philo, "has taken a fork");
+	pthread_mutex_lock(philo->l_fork);
+	print_message(philo, "has taken a fork");
 }
 
-static void	philo_unlock_forks(t_philo *philo)
+/*static void	philo_pause(t_philo *philo)
 {
-	pthread_mutex_t *first;
-    pthread_mutex_t *second;
-
-	first  = philo->r_fork;
-    second = philo->l_fork;
-    if (philo->l_fork < philo->r_fork)
-    {
-        first  = philo->l_fork;
-        second = philo->r_fork;
-    }
-    pthread_mutex_unlock(second);
-    pthread_mutex_unlock(first);
-}
+	if (philo->philo_id % 2 == 0)
+	{
+		if (philo->data->philo_num <=10)
+			usleep(100);
+		else if (philo->data->philo_num <=50)
+			usleep(500);
+		else if (philo->data->philo_num <=100)
+			usleep(1000);
+		else
+			usleep(3000);
+	}
+}*/
 
 void	*philo_routine(void *args)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *) args;
-	
+	if (philo->data->philo_num == 1)
+	{
+		print_message(philo, "has taken a fork");
+		return (NULL);
+	}
+	//philo_pause(philo);
+	if (philo->philo_id % 2 == 0)
+		usleep(1000);
 	pthread_mutex_lock(&philo->data->manager);
 	while (!philo->data->philo_over)
 	{
 		pthread_mutex_unlock(&philo->data->manager);
-		if (philo->data->philo_num == 1)
-		{
-			print_message(philo, "has taken a fork");
-			break ;
-		}
 		philo_lock_forks(philo->data, philo);
 		philo_eat(philo->data, philo);
-		philo_unlock_forks(philo);
+		pthread_mutex_unlock(philo->r_fork);
+		pthread_mutex_unlock(philo->l_fork);
 		philo_sleep(philo->data, philo);
 		print_message(philo, "is thinking");
 		pthread_mutex_lock(&philo->data->manager);

@@ -6,7 +6,7 @@
 /*   By: jomanuel <jomanuel@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 15:14:21 by jomanuel          #+#    #+#             */
-/*   Updated: 2025/09/01 23:03:00 by jomanuel         ###   ########.fr       */
+/*   Updated: 2025/09/02 21:29:26 by jomanuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ static int	init_forks(t_data *data)
 
 static int	init_philos(t_data *data)
 {
-	int	i;
-	t_philo *philo;
+	int		i;
+	t_philo	*philo;
 
 	i = -1;
 	data->philosophers = malloc(data->philo_num * sizeof(t_philo));
