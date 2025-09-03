@@ -6,7 +6,7 @@
 /*   By: jomanuel <jomanuel@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 22:29:06 by jomanuel          #+#    #+#             */
-/*   Updated: 2025/09/01 23:16:04 by jomanuel         ###   ########.fr       */
+/*   Updated: 2025/09/03 01:45:54 by jomanuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,11 @@ void	print_message(t_philo *philo, char *msg)
 {
 	long long	time;
 
-	pthread_mutex_lock(&philo->data->manager);
-	if (!philo->data->philo_over)
+	pthread_mutex_lock(&philo->data->print_mutex);
+	if (!philo->data->philo_over || !ft_strcmp(msg, "died"))
 	{
 		time = get_time_ms() - philo->data->time_start;
 		printf("%lld %d %s\n", time, philo->philo_id, msg);
 	}
-	pthread_mutex_unlock(&philo->data->manager);
+	pthread_mutex_unlock(&philo->data->print_mutex);
 }

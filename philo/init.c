@@ -6,7 +6,7 @@
 /*   By: jomanuel <jomanuel@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/30 15:14:21 by jomanuel          #+#    #+#             */
-/*   Updated: 2025/09/02 21:29:26 by jomanuel         ###   ########.fr       */
+/*   Updated: 2025/09/03 01:18:07 by jomanuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,11 @@ static int	init_philos(t_data *data)
 int	data_init(int argc, char **argv, t_data *data)
 {
 	init_vals(argc, argv, data);
-	if (pthread_mutex_init(&data->manager, NULL))
+	if (pthread_mutex_init(&data->print_mutex, NULL))
+		return (1);
+	if (pthread_mutex_init(&data->death_mutex, NULL))
+		return (1);
+	if (pthread_mutex_init(&data->eat_mutex, NULL))
 		return (1);
 	if (init_forks(data) || init_philos(data))
 		return (1);
@@ -82,7 +86,9 @@ void	terminate_philo(t_data *data)
 	i = -1;
 	while (++i < data->philo_num)
 		pthread_mutex_destroy(&data->forks[i]);
-	pthread_mutex_destroy(&data->manager);
+	pthread_mutex_destroy(&data->print_mutex);
+	pthread_mutex_destroy(&data->death_mutex);
+	pthread_mutex_destroy(&data->eat_mutex);
 	free(data->forks);
 	free(data->philosophers);
 }

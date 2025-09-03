@@ -6,7 +6,7 @@
 /*   By: jomanuel <jomanuel@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 16:54:27 by jomanuel          #+#    #+#             */
-/*   Updated: 2025/09/02 21:33:06 by jomanuel         ###   ########.fr       */
+/*   Updated: 2025/09/03 01:17:12 by jomanuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,9 @@ typedef struct s_data
 {
 	t_philo			*philosophers;
 	pthread_mutex_t	*forks;
-	pthread_mutex_t	manager;
+	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	death_mutex;
+	pthread_mutex_t	eat_mutex;
 	long long		time_start;
 	int				philo_num;
 	int				time_to_die;
