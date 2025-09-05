@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   actions.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jomanuel <jomanuel@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: jomanuel <jomanuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 23:15:40 by jomanuel          #+#    #+#             */
-/*   Updated: 2025/09/03 14:53:42 by jomanuel         ###   ########.fr       */
+/*   Updated: 2025/09/03 21:23:04 by jomanuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,21 +54,7 @@ void	philo_eat(t_data *data, t_philo *philo)
 
 static void	philo_lock_forks(t_data *data, t_philo *philo)
 {
-	bool	over;
-
-	pthread_mutex_lock(&data->eat_mutex);
-	while (!philo->can_eat)
-	{
-		pthread_mutex_unlock(&data->eat_mutex);
-		usleep(500);
-		pthread_mutex_lock(&data->death_mutex);
-		over = data->philo_over;
-		pthread_mutex_unlock(&data->death_mutex);
-		if (over)
-			break ;
-		pthread_mutex_lock(&data->eat_mutex);
-	}
-	pthread_mutex_unlock(&data->eat_mutex);
+	can_eat_loop(data, philo);
 	if (philo->philo_id % 2 == 0)
 	{
 		pthread_mutex_lock(philo->r_fork);
@@ -83,30 +69,11 @@ static void	philo_lock_forks(t_data *data, t_philo *philo)
 		pthread_mutex_lock(philo->r_fork);
 		print_message(philo, "has taken a fork");
 	}
-	/*pthread_mutex_lock(philo->r_fork);
-	print_message(philo, "has taken a fork");
-	pthread_mutex_lock(philo->l_fork);
-	print_message(philo, "has taken a fork");*/
 }
 
-/*static void	philo_pause(t_philo *philo)
+static void	philo_unlock_forks(t_philo *philo)
 {
-	if (philo->philo_id % 2 != 0)
-	{
-		if (philo->data->philo_num <=10)
-			usleep(500);
-		else if (philo->data->philo_num <=50)
-			usleep(1000);
-		else if (philo->data->philo_num <=100)
-			usleep(2500);
-		else
-			usleep(5000);
-	}
-}*/
-
-static void philo_unlock_forks(t_philo *philo)
-{
-    if (philo->philo_id % 2 == 0)
+	if (philo->philo_id % 2 == 0)
 	{
 		pthread_mutex_unlock(philo->l_fork);
 		pthread_mutex_unlock(philo->r_fork);
@@ -116,8 +83,6 @@ static void philo_unlock_forks(t_philo *philo)
 		pthread_mutex_unlock(philo->r_fork);
 		pthread_mutex_unlock(philo->l_fork);
 	}
-	//pthread_mutex_unlock(philo->l_fork);
-	//pthread_mutex_unlock(philo->r_fork);
 }
 
 void	*philo_routine(void *args)
@@ -134,7 +99,6 @@ void	*philo_routine(void *args)
 	while (!philo->data->philo_over)
 	{
 		pthread_mutex_unlock(&philo->data->death_mutex);
-		//philo_pause(philo);
 		if (philo->philo_id % 2 == 0)
 			usleep(1000);
 		philo_lock_forks(philo->data, philo);

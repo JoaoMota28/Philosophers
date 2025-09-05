@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jomanuel <jomanuel@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: jomanuel <jomanuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 22:29:06 by jomanuel          #+#    #+#             */
-/*   Updated: 2025/09/03 01:45:54 by jomanuel         ###   ########.fr       */
+/*   Updated: 2025/09/03 21:19:45 by jomanuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,37 @@ void	print_message(t_philo *philo, char *msg)
 {
 	long long	time;
 
-	pthread_mutex_lock(&philo->data->print_mutex);
+	pthread_mutex_lock(&philo->data->death_mutex);
 	if (!philo->data->philo_over || !ft_strcmp(msg, "died"))
 	{
+		pthread_mutex_unlock(&philo->data->death_mutex);
 		time = get_time_ms() - philo->data->time_start;
+		pthread_mutex_lock(&philo->data->print_mutex);
 		printf("%lld %d %s\n", time, philo->philo_id, msg);
+		pthread_mutex_unlock(&philo->data->print_mutex);
 	}
-	pthread_mutex_unlock(&philo->data->print_mutex);
+	else
+		pthread_mutex_unlock(&philo->data->death_mutex);
+}
+
+void	can_eat_loop(t_data *data, t_philo *philo)
+{
+	bool	over;
+
+	pthread_mutex_lock(&data->eat_mutex);
+	while (!philo->can_eat)
+	{
+		pthread_mutex_unlock(&data->eat_mutex);
+		usleep(500);
+		pthread_mutex_lock(&data->death_mutex);
+		over = data->philo_over;
+		pthread_mutex_unlock(&data->death_mutex);
+		if (over)
+		{
+			pthread_mutex_lock(&data->eat_mutex);
+			break ;
+		}
+		pthread_mutex_lock(&data->eat_mutex);
+	}
+	pthread_mutex_unlock(&data->eat_mutex);
 }

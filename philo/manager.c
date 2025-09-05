@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   manager.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jomanuel <jomanuel@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: jomanuel <jomanuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/31 13:54:27 by jomanuel          #+#    #+#             */
-/*   Updated: 2025/09/03 14:50:42 by jomanuel         ###   ########.fr       */
+/*   Updated: 2025/09/03 17:41:42 by jomanuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,5 +103,5 @@ void	data_manager(t_data *data)
 			break ;
 		usleep(1000);
 	}
-	terminate_philo(data);
+	terminate_philo(data, 0, data->philo_num);
 }

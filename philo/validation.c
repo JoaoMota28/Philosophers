@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   validation.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jomanuel <jomanuel@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: jomanuel <jomanuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 22:25:29 by jomanuel          #+#    #+#             */
-/*   Updated: 2025/09/02 21:31:37 by jomanuel         ###   ########.fr       */
+/*   Updated: 2025/09/03 17:02:59 by jomanuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	valid_args(int argc, char **argv)
 		}
 		i++;
 	}
-	if (!ft_strcmp(argv[1], "0"))
+	if (ft_atoll_abs(argv[1]) == 0)
 	{
 		write(2, PHILO_NUM_ERR, 38);
 		return (0);

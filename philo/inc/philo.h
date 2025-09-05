@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jomanuel <jomanuel@student.42lisboa.com    +#+  +:+       +#+        */
+/*   By: jomanuel <jomanuel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/29 16:54:27 by jomanuel          #+#    #+#             */
-/*   Updated: 2025/09/03 01:17:12 by jomanuel         ###   ########.fr       */
+/*   Updated: 2025/09/03 17:41:35 by jomanuel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,12 +64,13 @@ int			valid_args(int argc, char **argv);
 int			data_init(int argc, char **argv, t_data *data);
 void		*philo_routine(void *args);
 void		data_manager(t_data *data);
-void		terminate_philo(t_data *data);
+void		terminate_philo(t_data *data, int flag, int j);
 
 // Utils
 int			ft_strcmp(const char *s1, const char *s2);
 long long	ft_atoll_abs(const char *nptr);
 long long	get_time_ms(void);
 void		print_message(t_philo *philo, char *msg);
+void		can_eat_loop(t_data *data, t_philo *philo);
 
 #endif
